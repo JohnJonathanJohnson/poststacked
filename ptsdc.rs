@@ -247,6 +247,10 @@ fn to_c(words: Vec<String>) -> Result<String, (String, usize)> {
     for symbol in code.into_iter().rev() {
         rev_code.push(symbol);
     }
+
+    if !rev_code.contains(&(0, 0)) {
+        panic!("You forgot to put in an exit statement!");
+    }
             
     Ok(add_boilerplate(rev_code, stack_map, var_num))
 }
@@ -420,8 +424,6 @@ int main() {
         char* cbuf;
         Node* stop;
 
-	push(0, 0, 0);
-	push(0, 0, 1);
 	//Start of global code.
 	//Reminder that variables start at 2.
 ");
