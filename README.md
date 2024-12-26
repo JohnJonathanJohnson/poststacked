@@ -12,15 +12,12 @@ ___
 * Reading the source code and the given example may be more helpful than the reference below because I'm *really* bad at explaining things.
 * The compiler errors aren't very helpful.
 
-___
-
 ## Usage
 
 1. ` ./ptsdc input.ptsd [-o output] ` for the executable. It will come out as a C file.
 2. ` bash ptsdc.sh input.ptsd output ` for the provided short shell script. It will come out an executable. (I don't understand std::process at all...)
 3. Note that if this is compiled with clang it will throw a Segmentation Fault error. The memory management is bad.
 
-___
 
 ## Reference
 
@@ -50,7 +47,7 @@ push
 ### Operations
 Note that they can be called in either UPPERLINE or underline form.
 
-Stack-related operations.
+#### Stack-related operations.
 1. PUSH Pushes a value into a variable.
 2. POP Pops a value from a variable.
 3. PEEK Peeks at the top value of a variable.
@@ -58,13 +55,13 @@ Stack-related operations.
 5. CLONE Clones a variable, overriding the destination.
 6. FLUSH Flushes a variable, leaving it at size 0 and without values.
 
-Maths-related operations.
+#### Maths-related operations.
 7. ADD / +
 8. SUB / -
 9. MPY / *
 10. DIV / /
 
-Boolean-related operations.
+#### Boolean-related operations.
 11. IF
 12. EQUAL / =
 13. UNEQUAL / !=
@@ -74,7 +71,7 @@ Boolean-related operations.
 17. AND / &
 18. OR / |
 
-I/O, note that scan can only scan characters.
+#### I/O, note that scan can only scan characters.
 19. PRINT
 20. SCAN
 21. WRITE Writes to file.
@@ -82,13 +79,13 @@ I/O, note that scan can only scan characters.
 
 23. SIZE
 
-type casts.
+#### type casts.
 24. INT
 25. FIXED
 26. CHAR
 
 27. RUN
-___
+
 
 ## Personal Remarks (Not Important, Extremely Egotistical.)
 
