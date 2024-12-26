@@ -1,8 +1,8 @@
 # PostStacked
+___
+
 ### A language written by a madman for madmen.
 I don't know how to write markdown so I'll just use Discord syntax.
-
-___
 
 ## Key Points
 
@@ -11,6 +11,11 @@ ___
 * The language is designed to contain as little parentheses/brackets/quotes as possible but I got lazy and gave up midway. Anything inspired by this is deeply appreciated.
 * Reading the source code and the given example may be more helpful than the reference below because I'm *really* bad at explaining things.
 * The compiler errors aren't very helpful.
+
+## Build
+
+Compile the ptsdc.rs file.
+` rustc ptsdc.rs `
 
 ## Usage
 
