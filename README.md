@@ -48,12 +48,12 @@ push
 Note that they can be called in either UPPERLINE or underline form.
 
 #### Stack-related operations.
-1. PUSH Pushes a value into a variable.
-2. POP Pops a value from a variable.
-3. PEEK Peeks at the top value of a variable.
-4. RENAME Renames a variable, overriding the destination.
-5. CLONE Clones a variable, overriding the destination.
-6. FLUSH Flushes a variable, leaving it at size 0 and without values.
+1. PUSH Pushes a value into a variable. ` VAR value PUSH `
+2. POP Pops a value from a variable. ` VAR POP `
+3. PEEK Peeks at the top value of a variable. ` VAR PEEK `
+4. RENAME Renames a variable, overriding the destination. ` OLD NEW RENAME `
+5. CLONE Clones a variable, overriding the destination. ` ORIG CLON RENAME `
+6. FLUSH Flushes a variable, leaving it at size 0 and without values. ` VAR FLUSH `
 
 #### Maths-related operations.
 7. ADD / +
@@ -62,7 +62,7 @@ Note that they can be called in either UPPERLINE or underline form.
 10. DIV / /
 
 #### Boolean-related operations.
-11. IF
+11. IF ` boolean (0 or 1) stack IF `
 12. EQUAL / =
 13. UNEQUAL / !=
 14. LESS / <
@@ -72,19 +72,19 @@ Note that they can be called in either UPPERLINE or underline form.
 18. OR / |
 
 #### I/O, note that scan can only scan characters.
-19. PRINT
-20. SCAN
-21. WRITE Writes to file.
+19. PRINT ` value PRINT `
+20. SCAN ` SCAN `
+21. WRITE Writes to file. ` (stack with file name) (stack with content) WRITE/READ `
 22. READ Reads from file. (Note that the last character will be on top.)
 
-23. SIZE
+23. SIZE ` VAR SIZE `
 
 #### type casts.
 24. INT
 25. FIXED
 26. CHAR
 
-27. RUN
+27. RUN ` stack RUN `
 
 
 ## Personal Remarks (Not Important, Extremely Egotistical.)
