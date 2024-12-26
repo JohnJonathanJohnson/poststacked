@@ -30,8 +30,6 @@ fn main() {
     let file = fs::read_to_string(input).expect("Sorry, but I couldn't find the file. I really tried my best.");
     let words = to_words(file);
 
-    //debug print.
-    println!("{words:?}");
     let result = to_c(words);
     match result {
 
@@ -243,11 +241,6 @@ fn to_c(words: Vec<String>) -> Result<String, (String, usize)> {
         }
         code.push(*var_map.get(word).unwrap());
     }
-
-    //debug print.
-    println!("IR:\n{code:?}\n");
-    println!("STACKS:\n{stack_map:?}\n");
-    println!("VARS:\n{var_map:?}\n");
 
     let mut rev_code = Vec::<(i32, i32)>::new();
 
@@ -530,8 +523,9 @@ L6:	//flush.
 	goto L0;
 
 L7:	//add.
-	if (peek(1).type == -1) return 5;
 	top = pop(1);
+	if (top.type < 1) return 5;
+	if (peek(1).type < 1) return 5;
 	if (((top.type == 1 || top.type == 3) && (peek(1).type == 1 || peek(1).type == 3)) || top.type == peek(1).type) {
 		push(1, top.val + pop(1).val, top.type);
 	} else if (top.type == 1 || top.type == 3) {
@@ -542,8 +536,9 @@ L7:	//add.
 	goto L0;
 
 L8:	//sub.
-	if (peek(1).type == -1) return 5;
 	top = pop(1);
+	if (top.type < 1) return 5;
+	if (peek(1).type < 1) return 5;
 	if (((top.type == 1 || top.type == 3) && (peek(1).type == 1 || peek(1).type == 3)) || top.type == peek(1).type) {
 		push(1, pop(1).val - top.val, top.type);
 	} else if (top.type == 1 || top.type == 3) {
@@ -554,8 +549,9 @@ L8:	//sub.
 	goto L0;
 	
 L9:	//mpy.
-	if (peek(1).type == -1) return 5;
 	top = pop(1);
+	if (top.type < 1) return 5;
+	if (peek(1).type < 1) return 5;
 	if ((top.type == 1 || top.type == 3) && (peek(1).type == 1 || peek(1).type == 3)) {
 		push(1, pop(1).val * top.val, top.type);
 	} else if ((top.type == 1 || top.type == 3) || (peek(1).type == 1 || peek(1).type == 3)) {
@@ -568,10 +564,10 @@ L9:	//mpy.
 L10:	//div. To be fixed.
 	if (peek(1).type == -1) return 5;
 	top = pop(1);
-	if ((top.type == 1 || top.type == 3) && (peek(1).type == 1 || peek(1).type == 3)) {
+	if (peek(1).type == 1 || peek(1).type == 3) {
 		push(1, pop(1).val / top.val, top.type);
-	} else if ((top.type == 1 || top.type == 3) || (peek(1).type == 1 || peek(1).type == 3)) {
-		push(1, pop(1).val / top.val, 2);
+	} else if ((top.type == 1 || top.type == 3)) {
+		push(1, (long long)(pop(1).val) << 32 / top.val, 2);
 	} else {
 		push(1, (((long long)(pop(1).val) << 32) / top.val) >> 16, 2); //still very rough.
 	}
@@ -579,8 +575,8 @@ L10:	//div. To be fixed.
 
 L11:	//if. no else.
 	top = pop(1);
-	if (top.type != -2) return 3;
-	if (peek(1).type == -1) return 5;
+	if (top.type != -2) return 5;
+	if (peek(1).type < 1) return 5;
 	switch (pop(1).val) {
 		case 0: break;
 		case 1: push(0, top.val, 0); break;
@@ -589,27 +585,43 @@ L11:	//if. no else.
 	goto L0;
 
 L12:	//equal.
+        top = pop(1);
+	if (top.type == -1) return 5;
 	if (peek(1).type == -1) return 5;
-	if (pop(1).val == pop(1).val) push(1, 1, 1); else push(1, 0, 1);
+        if (top.type != 2 && peek(1).type == 2) top.val <<= 16;
+        if (top.type == 2 && peek(1).type != 2) {if (pop(1).val << 16 == top.val) push(1, 1, 1); else push(1, 0, 1); goto L0;}
+	if (top.val == pop(1).val) push(1, 1, 1); else push(1, 0, 1);
 	goto L0;
 
 L13:	//unequal.
+        top = pop(1);
+	if (top.type == -1) return 5;
 	if (peek(1).type == -1) return 5;
-	if (pop(1).val != pop(1).val) push(1, 1, 1); else push(1, 0, 1);
+        if (top.type != 2 && peek(1).type == 2) top.val <<= 16;
+        if (top.type == 2 && peek(1).type != 2) {if (pop(1).val << 16 != top.val) push(1, 1, 1); else push(1, 0, 1); goto L0;}
+	if (top.val != pop(1).val) push(1, 1, 1); else push(1, 0, 1);
 	goto L0;
 
 L14:	//less than. Reversed because of how C works...
+        top = pop(1);
+	if (top.type == -1) return 5;
 	if (peek(1).type == -1) return 5;
-	if (pop(1).val <= pop(1).val) push(1, 0, 1); else push(1, 1, 1);
+        if (top.type != 2 && peek(1).type == 2) top.val <<= 16;
+        if (top.type == 2 && peek(1).type != 2) {if (pop(1).val << 16 <= top.val) push(1, 0, 1); else push(1, 1, 1); goto L0;}
+	if (top.val <= pop(1).val) push(1, 0, 1); else push(1, 1, 1);
 	goto L0;
 
 L15:	//more than.
+        top = pop(1);
+	if (top.type == -1) return 5;
 	if (peek(1).type == -1) return 5;
-	if (pop(1).val >= pop(1).val) push(1, 0, 1); else push(1, 1, 1);
+        if (top.type != 2 && peek(1).type == 2) top.val <<= 16;
+        if (top.type == 2 && peek(1).type != 2) {if (pop(1).val << 16 >= top.val) push(1, 0, 1); else push(1, 1, 1); goto L0;}
+	if (top.val >= pop(1).val) push(1, 0, 1); else push(1, 1, 1);
 	goto L0;
 
 L16:	//not.
-	if (peek(1).type == -1) return 5;
+	if (peek(1).type != 1) return 5;
 	switch (pop(1).val) {
 		case 0: push(1, 1, 1); break;
 		case 1: push(1, 0, 1); break;
@@ -618,11 +630,17 @@ L16:	//not.
 	goto L0;
 
 L17:	//and.
-	push(1, pop(1).val & pop(1).val, 1);
+        top = pop(1);
+	if (top.type < 1) return 5;
+	if (peek(1).type < 1) return 5;
+	push(1, pop(1).val & top.val, 1);
 	goto L0;
 
 L18:	//or.
-	push(1, pop(1).val | pop(1).val, 1);
+        top = pop(1);
+	if (top.type < 1) return 5;
+	if (peek(1).type < 1) return 5;
+	push(1, pop(1).val | top.val, 1);
 	goto L0;
 
 L19:	//print.
@@ -648,9 +666,9 @@ L20:	//scan.
 	goto L0;
 
 L21:	//write.
-	if (peek(1).type != -1) return 5;
+	if (peek(1).type != -1) return 6;
         top = pop(1);
-	if (peek(1).type != -1) return 5;
+	if (peek(1).type != -1) return 6;
         cbuf = malloc(size(top.val) * sizeof(char));
         stop = vars[top.val]->top;
         for (int i = 0; i < size(top.val); i++) {
@@ -667,9 +685,9 @@ L21:	//write.
         goto L0;
 
 L22:	//read.
-	if (peek(1).type != -1) return 5;
+	if (peek(1).type != -1) return 6;
         top = pop(1);
-	if (peek(1).type != -1) return 5;
+	if (peek(1).type != -1) return 6;
         cbuf = malloc(size(top.val) * sizeof(char));
         stop = vars[top.val]->top;
         for (int i = 0; i < size(top.val); i++) {
