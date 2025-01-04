@@ -1,5 +1,4 @@
 # PostStacked
-___
 
 ### A language written by a madman for madmen.
 I don't know how to write markdown so I'll just use Discord syntax.
@@ -11,6 +10,7 @@ I don't know how to write markdown so I'll just use Discord syntax.
 * The language is designed to contain as little parentheses/brackets/quotes as possible but I got lazy and gave up midway. Anything inspired by this is deeply appreciated.
 * Reading the source code and the given example may be more helpful than the reference below because I'm *really* bad at explaining things.
 * The compiler errors aren't very helpful.
+* Extremely unstable at the moment. The syntax and functionalities may change drastically.
 
 ## Build
 
@@ -90,7 +90,11 @@ Note that they can be called in either UPPERLINE or underline form.
 26. CHAR
 
 27. RUN ` stack RUN `
+28. SYS / SYSTEM Calls the commandline. Basically the WRITE operation but with the C function system(). ` stack SYS `
 
+## TODO:
+1. Implement variable typing.
+2. Compile to something that isn't a C code that only works on one specific compiler.
 
 ## Personal Remarks (Not Important, Extremely Egotistical.)
 

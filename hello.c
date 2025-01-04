@@ -234,7 +234,7 @@ L0:
 	if (size(0) == 0) return 1;
 	top = pop(0);
 	//debug print.
-	printf("%d|%d\n", top.val, top.type);
+	printf("%ld|%ld\n", top.val, top.type);
 	switch (top.type) {
 		case 0: switch (top.val) {
 			case 0: return peek(1).val; break;
