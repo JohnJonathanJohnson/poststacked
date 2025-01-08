@@ -109,7 +109,6 @@ PRINT_STACK {
 } PUSH
 
 // Now I need to split my input into two, based on space and \n //
-// There's bugs in here. //
 SplitInput {
 
 	sentence! RENAME
