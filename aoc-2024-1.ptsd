@@ -1,0 +1,240 @@
+// Parse a stack of characters into a SORTED (to-be-implemented) stack of numbers //
+ParseNums {
+
+SeperateInput! {
+chars! SIZE 0 > {
+	chars! PEEK 58 <
+	chars! PEEK 47 > & {
+		cbuf! chars! POP PUSH
+		SeperateInput! PEEK RUN
+		} IF
+	} IF
+} PUSH
+
+ParseNums! {
+
+	chars! PEEK 58 <
+	chars! PEEK 47 > &
+	SeperateInput! PEEK IF
+
+	chars! SIZE 0 > {_ chars! POP PUSH} IF
+
+	cbuf! SIZE 0 > {
+		nums! 0 PUSH
+		ParseNum! PEEK RUN
+	} IF
+
+	// Sorting happens here //
+	nums! SIZE 0 > {
+		top! nums! POP PUSH
+		InsertSorted! PEEK RUN
+		nums! top! POP PUSH
+		PutBufBack! PEEK RUN
+	} IF
+
+	chars! SIZE 0 > ParseNums! PEEK IF
+	nums! SIZE 0 = {2 EXIT} IF
+} PUSH
+
+ParseNum! {
+
+	cbuf! SIZE 0 > {
+		nums! nums! POP 10 * PUSH
+		nums! nums! POP cbuf! POP INT 48 - + PUSH
+		ParseNum! PEEK RUN
+	} IF
+} PUSH
+
+InsertSorted! {
+	nums! SIZE 0 > {
+		nums! PEEK top! PEEK < {
+			nbuf! nums! POP PUSH
+			InsertSorted! PEEK RUN
+		} IF
+	} IF
+} PUSH
+
+PutBufBack! {
+	nbuf! SIZE 0 > {
+		nums! nbuf! POP PUSH
+		PutBufBack! PEEK RUN
+	} IF
+} PUSH
+
+chars! RENAME
+chars! SIZE 0 = {1 EXIT} IF
+chars! SIZE 0 > ParseNums! PEEK IF
+
+cbuf! FLUSH
+nbuf! FLUSH
+ParseNum! FLUSH
+ParseNums! FLUSH
+chars! FLUSH
+SeperateInput! FLUSH
+InsertSorted! FLUSH
+PutBufBack! FLUSH
+top! FLUSH
+_ FLUSH
+
+nums!
+} PUSH
+
+
+// Accepts input until Q is input //
+AcceptInput {
+	AcceptanceLoop! {
+		cbuf! SCAN PUSH
+		cbuf! PEEK 'Q' = ! AcceptanceLoop! PEEK IF
+	} PUSH
+	AcceptanceLoop! PEEK RUN
+	AcceptanceLoop! FLUSH
+	_ cbuf! POP PUSH
+	_ FLUSH
+	cbuf!
+} PUSH
+
+
+// Prints a stack //
+PRINT_STACK {
+	printed! CLONE
+	print_the_thing! {
+		',' PRINT
+		' ' PRINT
+		printed! POP PRINT
+		printed! SIZE 0 > print_the_thing! PEEK IF
+	} PUSH
+	printed! SIZE 0 > {printed! POP PRINT} IF
+	printed! SIZE 0 > print_the_thing! PEEK IF
+	'\n' PRINT
+} PUSH
+
+// Now I need to split my input into two, based on space and \n //
+// There's bugs in here. //
+SplitInput {
+
+	sentence! RENAME
+	is_1! 1 PUSH
+
+	DestroySpace! {
+		sentence! SIZE 0 > {
+			sentence! PEEK ' ' =
+			sentence! PEEK '\n' = | {
+				_ sentence! POP PUSH
+				DestroySpace! PEEK RUN
+			} IF
+		} IF
+
+		_ FLUSH
+	} PUSH
+
+	Swap! {
+		cbuf! ' ' PUSH
+		is_1! PEEK 1 = {
+			cbuf! words2! RENAME
+			words1! cbuf! RENAME
+		} IF
+
+		is_1! PEEK -1 = {
+			cbuf! words1! RENAME
+			words2! cbuf! RENAME
+		} IF
+
+		is_1! is_1! POP -1 * PUSH
+		is_1! PEEK PRINT
+		'\n' PRINT
+	} PUSH
+
+	GetText! {
+
+		sentence! SIZE 0 > {
+		sentence! PEEK ' ' =
+		sentence! PEEK '\n' = | {
+			sentence! PEEK PRINT
+			'\n' PRINT
+			DestroySpace! PEEK RUN
+			Swap! PEEK RUN
+		} IF
+		} IF
+
+		sentence! SIZE 0 > {
+			sentence! PEEK ' ' = !
+			sentence! PEEK '\n' = ! & {
+				sentence! PEEK PRINT
+				'\n' PRINT
+				cbuf! sentence! POP PUSH
+			} IF
+		} IF
+
+		sentence! SIZE 0 > GetText! PEEK IF
+	} PUSH
+
+	sentence! SIZE 0 > GetText! PEEK IF
+
+	words1! SIZE 0 = {
+		cbuf! words1! RENAME
+	} IF
+
+	words2! SIZE 0 = {
+		cbuf! words2! RENAME
+	} IF
+
+	// reverse back //
+	Reverse! {
+		words! RENAME
+		Stuff! PEEK RUN
+		cbuf!
+	} PUSH
+
+	Stuff! {
+		words! SIZE 0 > {cbuf! words! POP PUSH Stuff! PEEK RUN} IF
+	} PUSH
+
+	words2! Reverse! PEEK RUN words2! RENAME
+	words1! Reverse! PEEK RUN words1! RENAME
+
+	words2! words1!
+} PUSH
+
+// Finally, compare the two stacks. //
+Compare {
+	nums_2! CLONE
+	nums_1! CLONE
+
+	CompareAll! {
+		result! nums_1! POP nums_2! POP - PUSH
+		result! PEEK 0 < {result! result! POP -1 * PUSH} IF
+		result! result! POP result! POP + PUSH
+		nums_1! SIZE 0 > nums_2! SIZE 0 > & CompareAll! PEEK IF
+	} PUSH
+
+	result! 0 PUSH
+	nums_1! SIZE 0 > nums_2! SIZE 0 > & CompareAll! PEEK RUN
+	result! POP
+} PUSH
+
+AcceptInput POP RUN inputs RENAME
+
+inputs PRINT_STACK PEEK RUN
+inputs SplitInput POP RUN nums_1 RENAME nums_2 RENAME
+
+nums_1 PRINT_STACK PEEK RUN
+nums_2 PRINT_STACK PEEK RUN
+
+nums_1 ParseNums PEEK RUN nums_1 RENAME
+nums_2 ParseNums POP RUN nums_2 RENAME
+
+nums_1 PRINT_STACK PEEK RUN
+nums_2 PRINT_STACK POP RUN
+
+'R' PRINT
+'e' PRINT
+'s' PRINT
+'u' PRINT
+'l' PRINT
+'t' PRINT
+':' PRINT
+' ' PRINT
+nums_1 nums_2 Compare POP RUN PRINT
+'\n' PRINT
+
+0 EXIT
