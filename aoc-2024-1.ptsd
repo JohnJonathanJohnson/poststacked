@@ -105,6 +105,7 @@ PRINT_STACK {
 	} PUSH
 	printed! SIZE 0 > {printed! POP PRINT} IF
 	printed! SIZE 0 > print_the_thing! PEEK IF
+	print_the_thing! FLUSH
 	'\n' PRINT
 } PUSH
 
@@ -112,7 +113,7 @@ PRINT_STACK {
 SplitInput {
 
 	sentence! RENAME
-	is_1! 1 PUSH
+	1! 1 PUSH
 
 	DestroySpace! {
 		sentence! SIZE 0 > {
@@ -128,18 +129,18 @@ SplitInput {
 
 	Swap! {
 		cbuf! ' ' PUSH
-		is_1! PEEK 1 = {
+		1! PEEK 1 = {
 			cbuf! words2! RENAME
 			words1! cbuf! RENAME
 		} IF
 
-		is_1! PEEK -1 = {
+		1! PEEK -1 = {
 			cbuf! words1! RENAME
 			words2! cbuf! RENAME
 		} IF
 
-		is_1! is_1! POP -1 * PUSH
-		is_1! PEEK PRINT
+		1! 1! POP -1 * PUSH
+		1! PEEK PRINT
 		'\n' PRINT
 	} PUSH
 
@@ -191,6 +192,15 @@ SplitInput {
 	words2! Reverse! PEEK RUN words2! RENAME
 	words1! Reverse! PEEK RUN words1! RENAME
 
+	sentence! FLUSH
+	Stuff! FLUSH
+	words! FLUSH
+	GetText! FLUSH
+	DestroySpace! FLUSH
+	Swap! FLUSH
+	Reverse! FLUSH
+	1! FLUSH
+	cbuf! FLUSH
 	words2! words1!
 } PUSH
 
