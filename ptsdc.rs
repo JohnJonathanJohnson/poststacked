@@ -62,7 +62,7 @@ fn to_c(words: Vec<String>) -> Result<String, (String, usize)> {
     //The tuple represents value and type. Using hash maps because of a coin toss.
     let mut var_map = HashMap::<String, (i32, i32)>::new();
     let mut stack_map = HashMap::<i32, Vec<(i32, i32)>>::new();
-    let mut stack_num = 29;
+    let mut stack_num = 30;
     let mut var_num = 2;
     let mut code = Vec::<(i32, i32)>::new();
 
@@ -96,6 +96,7 @@ fn to_c(words: Vec<String>) -> Result<String, (String, usize)> {
     var_map.insert("CHAR".to_string(), (26, 0));
     var_map.insert("RUN".to_string(), (27, 0));
     var_map.insert("SYS".to_string(), (28, 0));
+    var_map.insert("SKIP".to_string(), (29, 0));
 
     //Their aliases.
     var_map.insert("exit".to_string(), (0, 0));
@@ -140,6 +141,7 @@ fn to_c(words: Vec<String>) -> Result<String, (String, usize)> {
     var_map.insert("sys".to_string(), (28, 0));
     var_map.insert("system".to_string(), (28, 0));
     var_map.insert("SYSTEM".to_string(), (28, 0));
+    var_map.insert("skip".to_string(), (29, 0));
 
     let mut skip = false;
     let mut comment = false;
@@ -482,6 +484,7 @@ L0:
 			case 26: goto L26; break;	//CHAR
 			case 27: goto L27; break;	//RUN
 			case 28: goto L28; break;	//SYS
+			case 29: goto L29; break;	//SKIP
 "); 
 
     //push switch
@@ -760,6 +763,10 @@ L28:    //system.
             stop = stop->next;
         }
         system(cbuf);
+        goto L0;
+
+L29:    //skip.
+        pop(1);
         goto L0;
 	//End of boilerplate code. Of course, the number of cases are increased by how many blocks there are, same for variables.
 ");

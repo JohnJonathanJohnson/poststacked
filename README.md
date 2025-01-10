@@ -91,6 +91,8 @@ Note that they can be called in either UPPERLINE or underline form.
 
 27. RUN ` stack RUN `
 28. SYS / SYSTEM Calls the commandline. Basically the WRITE operation but with the C function system(). ` stack SYS `
+29. SKIP Pops the latest value in the buffer without doing anything with it.\
+Useful for when ` { ... } ` are used as tuples. ` (some value or stack, as long as it's not an instruction) SKIP `
 
 ## TODO:
 1. Implement variable typing.
