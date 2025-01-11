@@ -30,6 +30,8 @@ fn main() {
     let file = fs::read_to_string(input).expect("Sorry, but I couldn't find the file. I really tried my best.");
     let words = to_words(file);
 
+    //debug print
+    //println!("{words:?}");
     let result = to_c(words);
     match result {
 
@@ -143,7 +145,7 @@ fn to_c(words: Vec<String>) -> Result<String, (String, usize)> {
     var_map.insert("SYSTEM".to_string(), (28, 0));
     var_map.insert("skip".to_string(), (29, 0));
 
-    let mut skip = false;
+    let mut skip = 0;
     let mut comment = false;
 
     for (index, word) in words.iter().enumerate() {
@@ -154,12 +156,12 @@ fn to_c(words: Vec<String>) -> Result<String, (String, usize)> {
         }
 
         if comment || *word == String::from("//") {
-            skip = true;
+            skip = 1;
         }
 
         //skipping for space parsing...
-        if skip {
-            skip = false;
+        if skip > 0 {
+            skip -= 1;
             continue;
         }
 
@@ -173,7 +175,15 @@ fn to_c(words: Vec<String>) -> Result<String, (String, usize)> {
         if word == &String::from("'") {
             if words.get(index + 1).unwrap() == &String::from("'") {
                 code.push((' ' as i32, 3));
-                skip = true;
+                skip = 1;
+                continue;
+            } else if words.get(index + 1).unwrap() == &String::from("{") && words.get(index + 2).unwrap() == &String::from("'") {
+                code.push(('{' as i32, 3));
+                skip = 2;
+                continue;
+            } else if words.get(index + 1).unwrap() == &String::from("}") && words.get(index + 2).unwrap() == &String::from("'") {
+                code.push(('}' as i32, 3));
+                skip = 2;
                 continue;
             } else {
                 return Err(("Stray single-quote".to_string(), index));
@@ -244,6 +254,9 @@ fn to_c(words: Vec<String>) -> Result<String, (String, usize)> {
         if !var_map.contains_key(word) {
             var_map.insert(word.clone(), (var_num, -1));
             var_num += 1;
+            //debug print
+            //println!("{word}");
+
         }
         code.push(*var_map.get(word).unwrap());
     }
@@ -258,6 +271,8 @@ fn to_c(words: Vec<String>) -> Result<String, (String, usize)> {
         panic!("You forgot to put in an exit statement!");
     }
             
+    //debug print
+    //println!("{rev_code:?}");
     Ok(add_boilerplate(rev_code, stack_map, var_num))
 }
 
