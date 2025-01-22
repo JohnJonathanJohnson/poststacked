@@ -1,4 +1,5 @@
-# PostStacked
+# PostStacked (Discontinued)
+I have recently discovered the Forth programming language and now feel incredibly lost.
 
 ### A language written by a madman for madmen.
 I don't know how to write markdown so I'll just use Discord syntax.
@@ -43,9 +44,9 @@ Compile the ptsdc.rs file.
 2. Stacks are blocks of code that get appended on the instruction stack to be executed. They can be executed by running the RUN operation on them.
 EX: A stack that locks your program in a never-ending loop.
 ```
-loop{loop
+{loop
 peek run
-}
+}loop
 push
 ```
 
@@ -53,7 +54,8 @@ push
 Note that they can be called in either UPPERLINE or underline form.
 
 #### Stack-related operations.
-1. PUSH Pushes a value into a variable. ` VAR value PUSH `
+0. EXIT The exit statement. Exits with whatever is on top of the stack at the time. Implicitly declared at the end of the program. ` 0 EXIT `
+1. PUSH Pushes a value into a variable. ` value VAR PUSH `
 2. POP Pops a value from a variable. ` VAR POP `
 3. PEEK Peeks at the top value of a variable. ` VAR PEEK `
 4. RENAME Renames a variable, overriding the destination. ` OLD NEW RENAME `
@@ -91,12 +93,14 @@ Note that they can be called in either UPPERLINE or underline form.
 
 27. RUN ` stack RUN `
 28. SYS / SYSTEM Calls the commandline. Basically the WRITE operation but with the C function system(). ` stack SYS `
-29. SKIP Pops the latest value in the buffer without doing anything with it.\
-Useful for when ` { ... } ` are used as tuples. ` (some value or stack, as long as it's not an instruction) SKIP `
+29. SKIP Pops n latest values in the buffer without doing anything with them.\
+Useful for when ` { ... } ` are used as tuples. ` (some value(s) or stack(s) or any combination of both, as long as it's not an instruction) int SKIP `
 
 ## TODO:
 1. Implement variable typing.
 2. Compile to something that isn't a C code that only works on one specific compiler.
+3. Provide some optimization.
+4. Inline asm.
 
 ## Personal Remarks (Not Important, Extremely Egotistical.)
 

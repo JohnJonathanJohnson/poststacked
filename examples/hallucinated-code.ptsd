@@ -1,0 +1,26 @@
+{
+PRINTED RENAME
+PRINT_STACK PEEK RUN
+} PRINT_AND_POP_STACK PUSH
+
+{
+	PRINTED POP PRINT
+	PRINTED SIZE 0 = { '~' PRINT } IF
+	PRINTED SIZE 0 > PRINT_STACK PEEK IF
+}
+PRINT_STACK PUSH
+
+hello 'o' hello PUSH 'l' hello PUSH 'l' hello PUSH 'e' hello PUSH 'H' hello PUSH
+world '!' world PUSH 'd' world PUSH 'l' world PUSH 'r' world PUSH 'o' world PUSH 'W' world PUSH
+world world WRITE
+world !dlroW READ
+
+hello PRINT_AND_POP_STACK PEEK RUN
+' ' PRINT
+!dlroW PRINTED CLONE PRINT_STACK PEEK RUN
+'\n' PRINT
+
+////
+//Random number to show that we have fixed point, but not very accurate...//
+12.34 0.4321 * PRINT
+-1 EXIT

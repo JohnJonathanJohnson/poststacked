@@ -1,0 +1,22 @@
+'!' hello PUSH
+'d' hello PUSH
+'l' hello PUSH
+'r' hello PUSH
+'o' hello PUSH
+'W' hello PUSH
+' ' hello PUSH
+'o' hello PUSH
+'l' hello PUSH
+'l' hello PUSH
+'e' hello PUSH
+'H' hello PUSH
+' ' hello PUSH
+'o' hello PUSH
+'h' hello PUSH
+'c' hello PUSH
+'e' hello
+hello SKIP 'e' SKIP
+PUSH
+hello SYS
+hello system
+0 EXIT

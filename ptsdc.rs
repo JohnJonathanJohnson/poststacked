@@ -518,8 +518,9 @@ L0:
 		default: push(1, top.val, top.type); goto L0;
 	}
 L1:	//push into var.
-	if (peek(1).type == -1) return 5;
-	push(pop(1).val, pop(1).val, peek(1).type);
+        top = pop(1);
+	if (top.type != -1) return 5;
+	push(top.val, pop(1).val, peek(1).type);
 	goto L0;
 
 L2:	//pop from var.

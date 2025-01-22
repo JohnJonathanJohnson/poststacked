@@ -1,0 +1,10 @@
+PRINT_A_MIL {
+	i peek print
+	'\n' print
+	i i pop 1 + push
+	i peek 1000000 < PRINT_A_MIL peek if
+} push
+
+i 0 push
+PRINT_A_MIL peek run
+0 exit

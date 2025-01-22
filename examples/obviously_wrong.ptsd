@@ -1,0 +1,3 @@
+{gimbo gimba RENAME add} ada PUSH
+
+12 12 ada POP RUN

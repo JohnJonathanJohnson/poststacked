@@ -1,65 +1,63 @@
 // Parse a stack of characters into a SORTED (to-be-implemented) stack of numbers //
-ParseNums {
+{
 
-SeperateInput! {
-chars! SIZE 0 > {
-	chars! PEEK 58 <
-	chars! PEEK 47 > & {
-		cbuf! chars! POP PUSH
-		SeperateInput! PEEK RUN
+{
+	chars! SIZE 0 > {
+		chars! PEEK 58 <
+		chars! PEEK 47 > & {
+			chars! POP cbuf! PUSH
+			SeperateInput! PEEK RUN
 		} IF
 	} IF
-} PUSH
+} SeperateInput! PUSH
 
-ParseNums! {
+{
 
 	chars! PEEK 58 <
-	chars! PEEK 47 > &
-	SeperateInput! PEEK IF
-
-	chars! SIZE 0 > {_ chars! POP PUSH} IF
+	chars! PEEK 47 > & SeperateInput! PEEK IF
+	chars! SIZE 0 > {chars! POP _ PUSH} IF
 
 	cbuf! SIZE 0 > {
-		nums! 0 PUSH
+		0 nums! PUSH
 		ParseNum! PEEK RUN
 	} IF
 
 	// Sorting happens here //
 	nums! SIZE 0 > {
-		top! nums! POP PUSH
+		nums! POP top! PUSH
 		InsertSorted! PEEK RUN
-		nums! top! POP PUSH
+		top! POP nums! PUSH
 		PutBufBack! PEEK RUN
 	} IF
 
 	chars! SIZE 0 > ParseNums! PEEK IF
 	nums! SIZE 0 = {2 EXIT} IF
-} PUSH
+} ParseNums! PUSH
 
-ParseNum! {
+{
 
 	cbuf! SIZE 0 > {
-		nums! nums! POP 10 * PUSH
-		nums! nums! POP cbuf! POP INT 48 - + PUSH
+		nums! POP 10 * nums! PUSH
+		nums! POP cbuf! POP INT 48 - + nums! PUSH
 		ParseNum! PEEK RUN
 	} IF
-} PUSH
+} ParseNum! PUSH
 
-InsertSorted! {
+{
 	nums! SIZE 0 > {
 		nums! PEEK top! PEEK < {
-			nbuf! nums! POP PUSH
+			nums! POP nbuf! PUSH
 			InsertSorted! PEEK RUN
 		} IF
 	} IF
-} PUSH
+} InsertSorted! PUSH
 
-PutBufBack! {
+{
 	nbuf! SIZE 0 > {
-		nums! nbuf! POP PUSH
+		nbuf! POP nums! PUSH
 		PutBufBack! PEEK RUN
 	} IF
-} PUSH
+} PutBufBack! PUSH
 
 chars! RENAME
 chars! SIZE 0 = {1 EXIT} IF
@@ -77,58 +75,58 @@ top! FLUSH
 _ FLUSH
 
 nums!
-} PUSH
+} ParseNums PUSH
 
 
 // Accepts input until Q is input //
-AcceptInput {
-	AcceptanceLoop! {
-		cbuf! SCAN PUSH
+{
+	{
+		SCAN cbuf! PUSH
 		cbuf! PEEK 'Q' = ! AcceptanceLoop! PEEK IF
-	} PUSH
+	} AcceptanceLoop! PUSH
 	AcceptanceLoop! PEEK RUN
 	AcceptanceLoop! FLUSH
-	_ cbuf! POP PUSH
+	cbuf! POP _ PUSH
 	_ FLUSH
 	cbuf!
-} PUSH
+} AcceptInput PUSH
 
 
 // Prints a stack //
-PRINT_STACK {
+{
 	printed! CLONE
-	print_the_thing! {
+	{
 		',' PRINT
 		' ' PRINT
 		printed! POP PRINT
 		printed! SIZE 0 > print_the_thing! PEEK IF
-	} PUSH
+	} print_the_thing! PUSH
 	printed! SIZE 0 > {printed! POP PRINT} IF
 	printed! SIZE 0 > print_the_thing! PEEK IF
 	print_the_thing! FLUSH
 	'\n' PRINT
-} PUSH
+} PRINT_STACK PUSH
 
 // Now I need to split my input into two, based on space and \n //
-SplitInput {
+{
 
 	sentence! RENAME
-	1! 1 PUSH
+	1 1! PUSH
 
-	DestroySpace! {
+	{
 		sentence! SIZE 0 > {
 			sentence! PEEK ' ' =
 			sentence! PEEK '\n' = | {
-				_ sentence! POP PUSH
+				sentence! POP _ PUSH
 				DestroySpace! PEEK RUN
 			} IF
 		} IF
 
 		_ FLUSH
-	} PUSH
+	} DestroySpace! PUSH
 
-	Swap! {
-		cbuf! ' ' PUSH
+	{
+		' ' cbuf! PUSH
 		1! PEEK 1 = {
 			cbuf! words2! RENAME
 			words1! cbuf! RENAME
@@ -139,12 +137,12 @@ SplitInput {
 			words2! cbuf! RENAME
 		} IF
 
-		1! 1! POP -1 * PUSH
+		1! POP -1 * 1! PUSH
 		1! PEEK PRINT
 		'\n' PRINT
-	} PUSH
+	} Swap! PUSH
 
-	GetText! {
+	{
 
 		sentence! SIZE 0 > {
 		sentence! PEEK ' ' =
@@ -161,12 +159,12 @@ SplitInput {
 			sentence! PEEK '\n' = ! & {
 				sentence! PEEK PRINT
 				'\n' PRINT
-				cbuf! sentence! POP PUSH
+				sentence! POP cbuf! PUSH
 			} IF
 		} IF
 
 		sentence! SIZE 0 > GetText! PEEK IF
-	} PUSH
+	} GetText! PUSH
 
 	sentence! SIZE 0 > GetText! PEEK IF
 
@@ -179,15 +177,15 @@ SplitInput {
 	} IF
 
 	// reverse back //
-	Reverse! {
+	{
 		words! RENAME
 		Stuff! PEEK RUN
 		cbuf!
-	} PUSH
+	} Reverse! PUSH
 
-	Stuff! {
-		words! SIZE 0 > {cbuf! words! POP PUSH Stuff! PEEK RUN} IF
-	} PUSH
+	{
+		words! SIZE 0 > {words! POP cbuf! PUSH Stuff! PEEK RUN} IF
+	} Stuff! PUSH
 
 	words2! Reverse! PEEK RUN words2! RENAME
 	words1! Reverse! PEEK RUN words1! RENAME
@@ -202,24 +200,24 @@ SplitInput {
 	1! FLUSH
 	cbuf! FLUSH
 	words2! words1!
-} PUSH
+} SplitInput PUSH
 
 // Finally, compare the two stacks. //
-Compare {
+{
 	nums_2! CLONE
 	nums_1! CLONE
 
-	CompareAll! {
-		result! nums_1! POP nums_2! POP - PUSH
-		result! PEEK 0 < {result! result! POP -1 * PUSH} IF
-		result! result! POP result! POP + PUSH
+	{
+		nums_1! POP nums_2! POP - result! PUSH
+		result! PEEK 0 < {result! POP -1 * result! PUSH} IF
+		result! POP result! POP + result! PUSH
 		nums_1! SIZE 0 > nums_2! SIZE 0 > & CompareAll! PEEK IF
-	} PUSH
+	} CompareAll! PUSH
 
-	result! 0 PUSH
+	0 result! PUSH
 	nums_1! SIZE 0 > nums_2! SIZE 0 > & CompareAll! PEEK RUN
 	result! POP
-} PUSH
+} Compare PUSH
 
 AcceptInput POP RUN inputs RENAME
 

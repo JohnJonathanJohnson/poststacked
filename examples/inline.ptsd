@@ -1,0 +1,10 @@
+{ POP [
+	pop eax
+	syscall
+	]} syscall_one PUSH
+
+[
+	mov esi, 0
+] 60 syscall_one POP RUN
+
+0 EXIT
