@@ -782,8 +782,12 @@ L28:    //system.
         goto L0;
 
 L29:    //skip.
-        pop(1);
-        goto L0;
+        top = pop(1);
+        if (top.type != 1 && top.type != 3) return 5;
+        while (top.val-- > 0) {
+            pop(1);
+        }
+            goto L0;
 	//End of boilerplate code. Of course, the number of cases are increased by how many blocks there are, same for variables.
 ");
 
